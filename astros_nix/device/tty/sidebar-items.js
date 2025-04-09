@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"fn":["get_n_tty","new_job_control_and_ldisc","open_ntty_as_controlling_terminal"],"mod":["driver","line_discipline","termio"],"struct":["Tty","TtyDevice"]};

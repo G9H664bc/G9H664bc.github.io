@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"fn":["new_pair","new_pair_with_capacity"],"struct":["PipeReader","PipeWriter"]};

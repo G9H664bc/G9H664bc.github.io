@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"constant":["MAGIC_NUM"],"struct":["Ext2","FilePerm","Inode","SuperBlock"]};

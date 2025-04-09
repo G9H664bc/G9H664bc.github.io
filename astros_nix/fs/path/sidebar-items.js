@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"fn":["is_dot","is_dot_or_dotdot","is_dotdot"],"struct":["Dentry","DentryKey","MountNode"]};

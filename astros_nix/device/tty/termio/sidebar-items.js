@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"enum":["CC_C_CHAR","C_CFLAGS_BAUD","C_CFLAGS_CSIZE"],"struct":["C_CFLAGS","C_IFLAGS","C_LFLAGS","C_OFLAGS","KernelTermios","WinSize"]};

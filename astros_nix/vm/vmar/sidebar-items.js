@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"constant":["ROOT_VMAR_LOWEST_ADDR"],"fn":["get_intersected_range","is_intersected","is_userspace_vaddr"],"mod":["vm_mapping"],"struct":["Vmar","VmarMapOptions"],"trait":["VmarRightsOp"]};

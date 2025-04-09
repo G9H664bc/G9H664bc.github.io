@@ -1,0 +1,53 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Work queue mechanism."><title>astros_nix::thread::work_queue - Rust</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-6b053e98.ttf.woff2,FiraSans-Italic-81dc35de.woff2,FiraSans-Regular-0fe48ade.woff2,FiraSans-MediumItalic-ccf7e434.woff2,FiraSans-Medium-e1aa3f0a.woff2,SourceCodePro-Regular-8badfe75.ttf.woff2,SourceCodePro-Semibold-aa29a496.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../../../static.files/normalize-9960930a.css"><link rel="stylesheet" href="../../../static.files/rustdoc-cf3c48c1.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="astros_nix" data-themes="" data-resource-suffix="" data-rustdoc-version="1.86.0-nightly (854f22563 2025-01-31)" data-channel="nightly" data-search-js="search-2d513d54.js" data-settings-js="settings-6dad6058.js" ><script src="../../../static.files/storage-302de22f.js"></script><script defer src="../sidebar-items.js"></script><script defer src="../../../static.files/main-9b5d7e41.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-893ab5e7.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-6580c154.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-044be391.svg"></head><body class="rustdoc mod"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle" title="show sidebar"></button></nav><nav class="sidebar"><div class="sidebar-crate"><h2><a href="../../../astros_nix/index.html">astros_<wbr>nix</a><span class="version">0.1.0</span></h2></div><div class="sidebar-elems"><section id="rustdoc-toc"><h2 class="location"><a href="#">Module work_<wbr>queue</a></h2><h3><a href="#">Sections</a></h3><ul class="block top-toc"><li><a href="#overview" title="Overview">Overview</a></li><li><a href="#examples" title="Examples">Examples</a></li></ul><h3><a href="#modules">Module Items</a></h3><ul class="block"><li><a href="#modules" title="Modules">Modules</a></li><li><a href="#structs" title="Structs">Structs</a></li><li><a href="#enums" title="Enums">Enums</a></li><li><a href="#functions" title="Functions">Functions</a></li></ul></section><div id="rustdoc-modnav"><h2><a href="../index.html">In astros_<wbr>nix::<wbr>thread</a></h2></div></div></nav><div class="sidebar-resizer"></div><main><div class="width-limiter"><rustdoc-search></rustdoc-search><section id="main-content" class="content"><div class="main-heading"><div class="rustdoc-breadcrumbs"><a href="../../index.html">astros_nix</a>::<wbr><a href="../index.html">thread</a></div><h1>Module <span>work_queue</span><button id="copy-path" title="Copy item path to clipboard">Copy item path</button></h1><rustdoc-toolbar></rustdoc-toolbar><span class="sub-heading"><a class="src" href="../../../src/astros_nix/thread/work_queue/mod.rs.html#3-204">Source</a> </span></div><details class="toggle top-doc" open><summary class="hideme"><span>Expand description</span></summary><div class="docblock"><p>Work queue mechanism.</p>
+<h2 id="overview"><a class="doc-anchor" href="#overview">§</a>Overview</h2>
+<p>A <code>workqueue</code> is a kernel-level mechanism used to schedule and execute deferred work.
+Deferred work refers to tasks that need to be executed at some point in the future,
+but not necessarily immediately.</p>
+<p>The workqueue mechanism is implemented using a combination of kernel threads and data
+structures such as <code>WorkItem</code>, <code>WorkQueue</code>, <code>Worker</code> and <code>WorkerPool</code>. The <code>WorkItem</code>
+represents a task to be processed, while the <code>WorkQueue</code> maintains the queue of submitted
+<code>WorkItems</code>. The <code>Worker</code> is responsible for processing these submitted tasks,
+and the <code>WorkerPool</code> manages and schedules these workers.</p>
+<h2 id="examples"><a class="doc-anchor" href="#examples">§</a>Examples</h2>
+<p>The system has a default work queue and worker pool,
+and it also provides high-level APIs for users to use.
+Here is a basic example to how to use those APIs.</p>
+
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use </span><span class="kw">crate</span>::thread::work_queue::{submit_work_func, submit_work_item, WorkItem};
+
+<span class="comment">// Submit to high priority queue.
+</span>submit_work_func(||{ }, <span class="bool-val">true</span>);
+
+<span class="comment">// Submit to low priority queue.
+</span>submit_work_func(||{ }, <span class="bool-val">false</span>);
+
+<span class="kw">fn </span>deferred_task(){
+    <span class="comment">// ...
+</span>}
+
+<span class="comment">// Create a work item.
+</span><span class="kw">let </span>work_item = Arc::new(WorkItem::new(Box::new(deferred_task)));
+
+<span class="comment">// Submit to high priority queue.
+</span>submit_work_item(work_item, <span class="bool-val">true</span>);
+
+<span class="comment">// Submit to low priority queue.
+</span>submit_work_item(work_item, <span class="bool-val">false</span>);</code></pre></div>
+<p>Certainly, users can also create a dedicated WorkQueue and WorkerPool.</p>
+
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use </span>kstd::cpu::CpuSet;
+<span class="kw">use </span><span class="kw">crate</span>::thread::work_queue::{WorkQueue, WorkerPool, WorkItem};
+
+<span class="kw">fn </span>deferred_task(){
+    <span class="comment">// ...
+</span>}
+
+<span class="kw">let </span>cpu_set = CpuSet::new_full();
+<span class="kw">let </span>high_pri_pool = WorkerPool::new(<span class="bool-val">true</span>, cpu_set);
+<span class="kw">let </span>my_queue = WorkQueue::new(Arc::downgrade(high_pri_pool.get().unwrap()));
+
+<span class="kw">let </span>work_item = Arc::new(WorkItem::new(Box::new(deferred_task)));
+my_queue.enqueue(work_item);
+</code></pre></div>
+</div></details><h2 id="modules" class="section-header">Modules<a href="#modules" class="anchor">§</a></h2><dl class="item-table"><dt><a class="mod" href="work_item/index.html" title="mod astros_nix::thread::work_queue::work_item">work_<wbr>item</a></dt><dt><a class="mod" href="worker/index.html" title="mod astros_nix::thread::work_queue::worker">worker</a></dt><dt><a class="mod" href="worker_pool/index.html" title="mod astros_nix::thread::work_queue::worker_pool">worker_<wbr>pool</a></dt></dl><h2 id="structs" class="section-header">Structs<a href="#structs" class="anchor">§</a></h2><dl class="item-table"><dt><a class="struct" href="struct.WorkQueue.html" title="struct astros_nix::thread::work_queue::WorkQueue">Work<wbr>Queue</a></dt><dd>A work queue maintains a series of work items to be handled
+asynchronously in a process context.</dd></dl><h2 id="enums" class="section-header">Enums<a href="#enums" class="anchor">§</a></h2><dl class="item-table"><dt><a class="enum" href="enum.WorkPriority.html" title="enum astros_nix::thread::work_queue::WorkPriority">Work<wbr>Priority</a></dt></dl><h2 id="functions" class="section-header">Functions<a href="#functions" class="anchor">§</a></h2><dl class="item-table"><dt><a class="fn" href="fn.init.html" title="fn astros_nix::thread::work_queue::init">init</a></dt><dd>Initialize global worker pools and work queues.</dd><dt><a class="fn" href="fn.submit_work_func.html" title="fn astros_nix::thread::work_queue::submit_work_func">submit_<wbr>work_<wbr>func</a></dt><dd>Submit a function to a global work queue.</dd><dt><a class="fn" href="fn.submit_work_item.html" title="fn astros_nix::thread::work_queue::submit_work_item">submit_<wbr>work_<wbr>item</a></dt><dd>Submit a work item to a global work queue.</dd></dl></section></div></main></body></html>

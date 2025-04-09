@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"constant":["TIMER_ABSTIME"],"mod":["clocks","timer","wait"],"static":["START_TIME"],"struct":["SystemTime","Timer","TimerManager","UnixTime","itimerspec_t","itimerval_t","timespec_t","timeval_t"],"trait":["Clock"],"type":["clock_t","clockid_t","suseconds_t","time_t"]};

@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"enum":["FdEvents"],"struct":["FdFlags","FileTable","FileTableEntry"],"trait":["WithFileTable"],"type":["FileDesc"]};

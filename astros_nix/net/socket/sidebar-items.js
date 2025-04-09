@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"enum":["SockShutdownCmd","SocketAddr"],"mod":["ip","options","unix","vsock"],"struct":["LingerOption","MessageHeader","SendRecvFlags"],"trait":["Socket"]};

@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"enum":["WorkPriority"],"fn":["init","submit_work_func","submit_work_item"],"mod":["work_item","worker","worker_pool"],"struct":["WorkQueue"]};
