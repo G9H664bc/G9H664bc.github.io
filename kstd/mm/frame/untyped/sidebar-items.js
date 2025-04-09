@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"struct":["FrameRef"],"trait":["AnyUFrameMeta","UntypedMem"],"type":["UFrame"]};
